@@ -10,7 +10,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.squareup.picasso.Picasso;
 import com.udacity.sandwichclub.model.Sandwich;
 import com.udacity.sandwichclub.utils.JsonUtils;
@@ -29,6 +28,7 @@ public class DetailActivity extends AppCompatActivity {
     Sandwich sandwich;
 
     ListView ingredientListView;
+    LinearLayout container;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +40,7 @@ public class DetailActivity extends AppCompatActivity {
         txtDescription = findViewById(R.id.description_tv);
         txtKnownAs = findViewById(R.id.also_known_tv);
         ingredientListView = findViewById(R.id.ingredients_tv);
-        ViewCompat.setNestedScrollingEnabled(ingredientListView, true);
+        container = findViewById(R.id.container);
         Intent intent = getIntent();
         if (intent == null) {
             closeOnError();
@@ -76,17 +76,23 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void populateUI() {
-        txtOrigin.setText(sandwich.getPlaceOfOrigin());
-        txtDescription.setText(sandwich.getDescription());
+        if(sandwich.getPlaceOfOrigin().isEmpty())
+            txtOrigin.setText(getString(R.string.no_data));
+        else txtOrigin.setText(sandwich.getPlaceOfOrigin());
+
+        if(sandwich.getDescription().isEmpty())
+            txtDescription.setText(getString(R.string.no_data));
+        else txtDescription.setText(sandwich.getDescription());
+
         List<String> alsoKnownList = sandwich.getAlsoKnownAs();
         StringBuilder stringBuilder = new StringBuilder();
-        if (alsoKnownList != null) {
+        if (alsoKnownList != null && !alsoKnownList.isEmpty()) {
             for (int i = 0; i < alsoKnownList.size(); i++) {
                 stringBuilder.append(sandwich.getAlsoKnownAs().get(i));
                 stringBuilder.append(", ");
             }
             txtKnownAs.setText(stringBuilder);
-        }
+        } else txtKnownAs.setText(getString(R.string.no_data));
         if (sandwich.getIngredients() != null) {
         List<String> ingredientList = sandwich.getIngredients();
             ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(

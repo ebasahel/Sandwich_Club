@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class JsonUtils {
-
     public static Sandwich parseSandwichJson(String json) {
         Sandwich sandwich = null;
         JSONObject nameJson;
@@ -32,8 +31,8 @@ public class JsonUtils {
                     ingredients.add(ingredientsJson.getString(i));
                 }
             }
-            sandwich = new Sandwich(nameJson.getString("mainName"),alsoKnownAs,jsonObj.getString("placeOfOrigin"),
-                    jsonObj.getString("description"),jsonObj.getString("image"),ingredients);
+            sandwich = new Sandwich(nameJson.optString("mainName"),alsoKnownAs,jsonObj.optString("placeOfOrigin"),
+                    jsonObj.optString("description"),jsonObj.optString("image"),ingredients);
         } catch (JSONException e) {
             e.printStackTrace();
         }
